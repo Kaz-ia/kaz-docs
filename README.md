@@ -2,7 +2,6 @@
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/Kaz-ia/kazz-docs)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
-[![Build & Deploy](https://github.com/Kaz-ia/kazz-docs/actions/workflows/deploy-to-cloud-run.yml/badge.svg)](https://github.com/Kaz-ia/kazz-docs/actions)
 
 > An intelligent application for extracting, analyzing, and comparing data from business documents like invoices (factures) and quotes (devis). Deployed on Google Cloud Run.
 
