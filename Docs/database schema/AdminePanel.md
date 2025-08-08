@@ -12,3 +12,8 @@
   . change status ( active / inactive / archived / updated )
   . update the client (email , fullname, phone, address, subscription plan, subscription start date, subscription end date)
   . reset the client password (by send email to the client with a link to reset the password)
+  
+
+## dashboard 
+
+ 
