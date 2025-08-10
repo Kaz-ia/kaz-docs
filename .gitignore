@@ -84,3 +84,6 @@ next-env.d.ts
 
 # project specific
 /public/documents
+
+# project description
+/Docs/project-description/project-description.md
