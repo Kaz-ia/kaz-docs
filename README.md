@@ -101,3 +101,5 @@ Our team manages tasks, sprints, and the project backlog on our Trello board.
 ## 🤝 Contributing
 
 Contributions from the team are welcome! Please read our [**CONTRIBUTING.md**](/CONTRIBUTING.md) to see how you can get involved, our branching strategy, and our workflow for submitting pull requests.
+
+
