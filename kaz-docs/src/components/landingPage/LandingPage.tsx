@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import AccueilForm from "../forms/acceul/AccountRequestForm";
 
 export default function LandingPage() {
   return (
@@ -487,52 +488,7 @@ export default function LandingPage() {
               <div>
                 <Card className="overflow-hidden border-border/40 shadow-xl">
                   <div className="h-2 bg-gradient-to-r from-primary to-primary/60"></div>
-                  <CardContent className="p-8">
-                    <h3 className="text-xl font-bold mb-6">Demande d'information</h3>
-                    
-                    <form className="space-y-5">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="space-y-2">
-                          <Label htmlFor="name" className="text-sm font-medium">Nom complet</Label>
-                          <Input id="name" placeholder="Ex: Ahmed Ben Ali" className="h-11" />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="email" className="text-sm font-medium">Email professionnel</Label>
-                          <Input id="email" type="email" placeholder="exemple@entreprise.com" className="h-11" />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="space-y-2">
-                          <Label htmlFor="company" className="text-sm font-medium">Société</Label>
-                          <Input id="company" placeholder="Nom de votre société" className="h-11" />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="sector" className="text-sm font-medium">Secteur d'activité</Label>
-                          <Input id="sector" placeholder="Ex: Commerce, Audit, Banque" className="h-11" />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="subscription" className="text-sm font-medium">Volume estimé (pages/an)</Label>
-                        <Input id="subscription" placeholder="Ex: 1000" className="h-11" />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="message" className="text-sm font-medium">Votre besoin</Label>
-                        <Textarea id="message" placeholder="Décrivez brièvement votre besoin ou vos questions" className="min-h-[120px] resize-none" />
-                      </div>
-
-                      <div className="pt-2">
-                        <Button type="submit" className="w-full h-11 rounded-md font-medium shadow-md hover:shadow-lg transition-all">
-                          Demander une démo
-                        </Button>
-                        <p className="mt-3 text-xs text-center text-muted-foreground">En soumettant ce formulaire, vous acceptez notre politique de confidentialité.</p>
-                      </div>
-                    </form>
-                  </CardContent>
+                 <AccueilForm/>
                 </Card>
               </div>
             </div>
