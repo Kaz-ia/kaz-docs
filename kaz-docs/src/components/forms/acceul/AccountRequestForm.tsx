@@ -55,7 +55,7 @@ type FormData = z.infer<typeof formSchema>
       setIsLoading(true);
     console.log("Form data:", data)
 
-     const response = await fetch("/api/registers", {
+     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,8 +63,11 @@ type FormData = z.infer<typeof formSchema>
      body: JSON.stringify({
         name: data.name,
         email: data.email,
-        password: "defaultPassword", // Ajoutez un mot de passe par défaut
-        company: data.company,}),
+        company: data.company,
+        message: data.message,
+        sector: data.sector,
+        subscription: data.subscription,
+      }),
     });
     await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
      if (!response.ok) {

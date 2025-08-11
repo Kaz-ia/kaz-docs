@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import AccueilForm from "../forms/acceul/AccueilForm";
+import AccueilForm from "../forms/acceul/AccountRequestForm";
 
 export default function LandingPage() {
   return (
