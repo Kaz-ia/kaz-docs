@@ -23,10 +23,10 @@ import { Terminal } from 'lucide-react';
 const formSchema = z.object({
 name: z.string().min(1, "Nom requis"),
 email: z.string().email("Format d'email invalide"),
-company: z.string().min(1, "Nom de l'entreprise requis"),
-sector: z.string().min(1, "Secteur requis"),
-subscription: z.string().min(1, "Quantité requise"),
-message: z.string().min(1, "Message requis"),
+company: z.string().optional(),
+sector: z.string().optional(),
+subscription: z.preprocess((value) => Number(value), z.number().min(1, "Quantité requise")),
+message: z.string().optional(),
 })
 
 export default function AccueilForm() {
@@ -55,7 +55,7 @@ type FormData = z.infer<typeof formSchema>
       setIsLoading(true);
     console.log("Form data:", data)
 
-     const response = await fetch("/api/register", {
+     const response = await fetch("/api/registe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
