@@ -6,6 +6,7 @@
   . change status ( new / contacted / replied / converted to client / archived )
   . convert the contact to client (email , fullname, phone, address, subscription plan, subscription start date, subscription end date)
 
+
 ## clients
  - list of the clients
  - manage the clients
