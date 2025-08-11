@@ -18,26 +18,15 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { log } from 'console';
 
 const formSchema = z.object({
-name: z.string().min(1, "Nom requis"),
-email: z.string().email("Format d'email invalide"),
-company: z.string().optional(),
-sector: z.string().optional(),
- subscription: z.preprocess(
-    (val) => {
-      if (typeof val === "string") {
-        if (val.endsWith('+')) {
-          return 100000;
-        }
-        const parts = val.split('-');
-        const num = parseInt(parts[parts.length - 1]);
-        return isNaN(num) ? val : num;
-      }
-      return val;
-    },
-    z.number().min(1000, "Quantité requise") 
-  ),message: z.string().optional(),
+  name: z.string().min(1, "Nom requis"),
+  email: z.string().email("Format d'email invalide"),
+  company: z.string().optional(),
+  sector: z.string().optional(),
+subscription: z.string().min(1, "Quantité requise"),
+  message: z.string().optional(),
 })
 
 export default function AccueilForm() {
@@ -51,31 +40,22 @@ const [isLoading, setIsLoading] = useState(false);
 
 type FormData = z.infer<typeof formSchema>
 
-    const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-    setValue,
-    reset,
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    mode: "onChange",
+const {
+  register,
+  handleSubmit,
+  formState: { errors, isValid },
+  setValue,
+  reset,
+} = useForm<FormData>({
+  resolver: zodResolver(formSchema),
+  mode: "onChange",
   })
-const handleSubscriptionChange = (value: string) => {
-  let numValue;
-  if (value === "10000+") {
-    numValue = 100000;
-  } else {
-    const parts = value.split('-');
-    numValue = parseInt(parts[parts.length - 1]);
-  }
-  setValue("subscription", numValue, { shouldValidate: true });
-};
+
   const onSubmit = async (data: FormData) => {
-    try {
-      setIsLoading(true);
-  
-     const response = await fetch("/api/register", {
+  try {
+    setIsLoading(true);
+
+    const response = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,33 +69,33 @@ const handleSubscriptionChange = (value: string) => {
         subscription: data.subscription,
       }),
     });
-    await new Promise((resolve) => setTimeout(resolve, 2000));  
+        await new Promise((resolve) => setTimeout(resolve, 2000));
      if (!response.ok) {
         throw new Error("Échec de l'envoi");
       }
-        setDialogContent({
-        title: "Formulaire soumis",
-        description: "Votre demande a été envoyée avec succès. Nous vous contacterons bientôt.",
-        isError: false,
-      });
-      setDialogOpen(true);
-      reset();
+    setDialogContent({
+      title: "Formulaire soumis",
+      description: "Votre demande a été envoyée avec succès. Nous vous contacterons bientôt.",
+      isError: false,
+    });
+    setDialogOpen(true);
+    reset();
     }catch (error) {
-      setDialogContent({
-        title: "Erreur",
+    setDialogContent({
+      title: "Erreur",
         description: "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer plus tard.",
-        isError: true,
-      });
-      setDialogOpen(true);
-      console.error("Error submitting form:", error);
+      isError: true,
+    });
+    setDialogOpen(true);
+    console.error("Error submitting form:", error);
     }
   finally {
-      setIsLoading(false);
-    }
+    setIsLoading(false);
+  }
   }
   return (
   <CardContent className="p-8">
-      <h3 className="text-xl font-bold mb-6">Demande d'information</h3>
+      <h3 className="text-xl font-bold mb-6">Demande d&apos;information</h3>
 
       <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -140,7 +120,7 @@ const handleSubscriptionChange = (value: string) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sector">Secteur d'activité</Label>
+            <Label htmlFor="sector">Secteur d&apos;activité</Label>
             <Input id="sector" {...register("sector")} placeholder="Ex: Commerce, Audit, Banque" className="h-11" />
             {errors.sector && <p className="text-red-500 text-sm">{errors.sector.message}</p>}
           </div>
@@ -149,15 +129,15 @@ const handleSubscriptionChange = (value: string) => {
         <div className="space-y-2">
   <Label htmlFor="subscription">Volume estimé (pages/an)</Label>
   <Select
-    onValueChange={handleSubscriptionChange}
-  >
+      onValueChange={(value) => setValue("subscription", value, { shouldValidate: true })}
+    >
     <SelectTrigger id="subscription" className="h-11">
       <SelectValue placeholder="Nombre estimé de pages par an" />
     </SelectTrigger>
     <SelectContent>
-      <SelectItem value="0-1000">0 - 1 000 Page</SelectItem>
-      <SelectItem value="1000-10000">1 000 - 10 000 Page</SelectItem>
-      <SelectItem value="10000+">+10 000 Page</SelectItem>
+      <SelectItem value="1000">0 - 1 000 Page</SelectItem>
+      <SelectItem value="10000">1 000 - 10 000 Page</SelectItem>
+      <SelectItem value="100000">+10 000 Page</SelectItem>
     </SelectContent>
   </Select>
           {errors.subscription && <p className="text-red-500 text-sm">{errors.subscription.message}</p>}
