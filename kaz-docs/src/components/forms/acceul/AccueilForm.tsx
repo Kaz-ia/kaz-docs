@@ -1,5 +1,5 @@
 "use client"; 
-import React from 'react'
+import React, { useState } from 'react'
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,6 +8,17 @@ import { Label } from "@/components/ui/label"
 import { CardContent } from "@/components/ui/card"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form" 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Terminal } from 'lucide-react';
 
 const formSchema = z.object({
 name: z.string().min(1, "Nom requis"),
@@ -19,7 +30,13 @@ message: z.string().min(1, "Message requis"),
 })
 
 export default function AccueilForm() {
-
+const [isLoading, setIsLoading] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState({
+    title: "",
+    description: "",
+    isError: false,
+  });
 
 type FormData = z.infer<typeof formSchema>
 
@@ -27,13 +44,51 @@ type FormData = z.infer<typeof formSchema>
     register,
     handleSubmit,
     formState: { errors, isValid },
+     reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
   })
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    try {
+      setIsLoading(true);
     console.log("Form data:", data)
+
+     const response = await fetch("/api/registers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+     body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        password: "defaultPassword", // Ajoutez un mot de passe par défaut
+        company: data.company,}),
+    });
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+     if (!response.ok) {
+        throw new Error("Échec de l'envoi");
+      }
+        setDialogContent({
+        title: "Formulaire soumis",
+        description: "Votre demande a été envoyée avec succès. Nous vous contacterons bientôt.",
+        isError: false,
+      });
+      setDialogOpen(true);
+      reset();
+    }catch (error) {
+      setDialogContent({
+        title: "Erreur",
+        description: "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer plus tard.",
+        isError: true,
+      });
+      setDialogOpen(true);
+      console.error("Error submitting form:", error);
+    }
+  finally {
+      setIsLoading(false);
+    }
   }
   return (
   <CardContent className="p-8">
@@ -81,14 +136,37 @@ type FormData = z.infer<typeof formSchema>
         </div>
 
         <div className="pt-2">
-          <Button type="submit" disabled={!isValid} className="w-full h-11 rounded-md font-medium shadow-md hover:shadow-lg transition-all">
-            Demander une démo
+          <Button type="submit"
+           disabled={!isValid || isLoading}
+            className="w-full h-11 rounded-md font-medium shadow-md hover:shadow-lg transition-all">
+           {isLoading ? "Envoi..." : "Demander une démo"} 
           </Button>
           <p className="mt-3 text-xs text-center text-muted-foreground">
             En soumettant ce formulaire, vous acceptez notre politique de confidentialité.
           </p>
         </div>
       </form>
+      
+      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {dialogContent.title}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {dialogContent.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              className={dialogContent.isError ? "bg-destructive hover:bg-destructive/90" : ""}
+            >
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    
     </CardContent>
   )
 }
