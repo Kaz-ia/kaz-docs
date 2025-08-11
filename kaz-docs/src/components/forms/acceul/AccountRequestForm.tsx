@@ -19,14 +19,23 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Terminal } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const formSchema = z.object({
 name: z.string().min(1, "Nom requis"),
 email: z.string().email("Format d'email invalide"),
 company: z.string().optional(),
 sector: z.string().optional(),
-subscription: z.preprocess((value) => Number(value), z.number().min(1, "Quantité requise")),
-message: z.string().optional(),
+subscription: z.preprocess(
+    (val) => {
+      if (typeof val === "string") {
+        const num = parseInt(val.split('-')[0]);
+        return isNaN(num) ? val : num;
+      }
+      return val;
+    },
+    z.number().min(1, "Quantité requise")
+  ),message: z.string().optional(),
 })
 
 export default function AccueilForm() {
@@ -40,16 +49,20 @@ const [isLoading, setIsLoading] = useState(false);
 
 type FormData = z.infer<typeof formSchema>
 
-  const {
+    const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-     reset,
+    setValue,
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
   })
-
+const handleSubscriptionChange = (value: string) => {
+  const numValue = parseInt(value.split('-')[0]);
+  setValue("subscription", numValue, { shouldValidate: true });
+};
   const onSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
@@ -127,10 +140,21 @@ type FormData = z.infer<typeof formSchema>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="subscription">Volume estimé (pages/an)</Label>
-          <Input id="subscription" {...register("subscription")} placeholder="Ex: 1000" className="h-11" />
+  <Label htmlFor="subscription">Volume estimé (pages/an)</Label>
+  <Select
+    onValueChange={handleSubscriptionChange}
+  >
+    <SelectTrigger id="subscription" className="h-11">
+      <SelectValue placeholder="Page approximatives par an" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="0-1000">0 - 1 000 / an</SelectItem>
+      <SelectItem value="1000-10000">1 000 - 10 000 / an</SelectItem>
+      <SelectItem value="10000+">+10 000 / an</SelectItem>
+    </SelectContent>
+  </Select>
           {errors.subscription && <p className="text-red-500 text-sm">{errors.subscription.message}</p>}
-        </div>
+</div>
 
         <div className="space-y-2">
           <Label htmlFor="message">Votre besoin</Label>
