@@ -152,12 +152,12 @@ const handleSubscriptionChange = (value: string) => {
     onValueChange={handleSubscriptionChange}
   >
     <SelectTrigger id="subscription" className="h-11">
-      <SelectValue placeholder="Page approximatives par an" />
+      <SelectValue placeholder="Nombre estimé de pages par an" />
     </SelectTrigger>
     <SelectContent>
-      <SelectItem value="0-1000">0 - 1 000 / an</SelectItem>
-      <SelectItem value="1000-10000">1 000 - 10 000 / an</SelectItem>
-      <SelectItem value="10000+">+10 000 / an</SelectItem>
+      <SelectItem value="0-1000">0 - 1 000 Page</SelectItem>
+      <SelectItem value="1000-10000">1 000 - 10 000 Page</SelectItem>
+      <SelectItem value="10000+">+10 000 Page</SelectItem>
     </SelectContent>
   </Select>
           {errors.subscription && <p className="text-red-500 text-sm">{errors.subscription.message}</p>}
