@@ -1,3 +1,6 @@
+"use client"
+
+import React from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import {
@@ -5,10 +8,11 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 
-import ProfileHeader from "@/components/profile/profile-header"
-import ProfileContent from "@/components/profile/ProfileContent"
-
-export default function Page() {
+export default function MainLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <SidebarProvider
       style={
@@ -21,8 +25,9 @@ export default function Page() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <ProfileHeader/>
-        <ProfileContent/>
+        <div className="flex flex-1 flex-col">
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )
