@@ -11,14 +11,12 @@ import { useForm } from "react-hook-form"
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Terminal } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const formSchema = z.object({
@@ -29,7 +27,6 @@ sector: z.string().optional(),
  subscription: z.preprocess(
     (val) => {
       if (typeof val === "string") {
-        // Handle the "+" case for 10000+
         if (val.endsWith('+')) {
           return 100000;
         }
@@ -77,9 +74,8 @@ const handleSubscriptionChange = (value: string) => {
   const onSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
-    console.log("Form data:", data)
-
-     const response = await fetch("/api/registe", {
+  
+     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +89,7 @@ const handleSubscriptionChange = (value: string) => {
         subscription: data.subscription,
       }),
     });
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));  
      if (!response.ok) {
         throw new Error("Échec de l'envoi");
       }
