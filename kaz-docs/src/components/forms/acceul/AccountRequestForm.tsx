@@ -26,15 +26,20 @@ name: z.string().min(1, "Nom requis"),
 email: z.string().email("Format d'email invalide"),
 company: z.string().optional(),
 sector: z.string().optional(),
-subscription: z.preprocess(
+ subscription: z.preprocess(
     (val) => {
       if (typeof val === "string") {
-        const num = parseInt(val.split('-')[0]);
+        // Handle the "+" case for 10000+
+        if (val.endsWith('+')) {
+          return 100000;
+        }
+        const parts = val.split('-');
+        const num = parseInt(parts[parts.length - 1]);
         return isNaN(num) ? val : num;
       }
       return val;
     },
-    z.number().min(1, "Quantité requise")
+    z.number().min(1000, "Quantité requise") 
   ),message: z.string().optional(),
 })
 
@@ -60,7 +65,13 @@ type FormData = z.infer<typeof formSchema>
     mode: "onChange",
   })
 const handleSubscriptionChange = (value: string) => {
-  const numValue = parseInt(value.split('-')[0]);
+  let numValue;
+  if (value === "10000+") {
+    numValue = 100000;
+  } else {
+    const parts = value.split('-');
+    numValue = parseInt(parts[parts.length - 1]);
+  }
   setValue("subscription", numValue, { shouldValidate: true });
 };
   const onSubmit = async (data: FormData) => {
